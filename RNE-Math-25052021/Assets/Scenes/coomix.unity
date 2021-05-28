@@ -198,13 +198,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59419231}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.17102611, y: -0.18921866, z: 0.033488348, w: 0.9663462}
+  m_LocalPosition: {x: 1.27, y: 1.15, z: -1.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20.073002, y: -22.158, z: 0}
 --- !u!114 &59419235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +221,13 @@ MonoBehaviour:
   interpolation1Mat: {fileID: 2100000, guid: b802ae11525e34b448288559870d4faf, type: 2}
   interpolation2Mat: {fileID: 2100000, guid: 342acb29b35deb144b305dbeec416470, type: 2}
   erreurMat: {fileID: 2100000, guid: 289f4ab17896925438b91de68fa40cf7, type: 2}
+  pointRed: {fileID: 2100000, guid: d93b2ebadac7b774cbdf155948191c9a, type: 2}
+  pointBlue: {fileID: 2100000, guid: b37f24b51b067564585d5be43082e750, type: 2}
+  pointGreen: {fileID: 2100000, guid: 51ab397367813fb4ead301dd3f2692c7, type: 2}
+  matSurface: {fileID: 2100000, guid: 93118656a609c9a4fba8f2faf9b91694, type: 2}
   pointPre: {fileID: 8590290138795700174, guid: 49922cc857a895d4bb101449acca92e9,
+    type: 3}
+  pointSurface: {fileID: 3757362512745643397, guid: 3723eb3834c21664e9d074395530012e,
     type: 3}
 --- !u!1 &252708617
 GameObject:

@@ -18,11 +18,12 @@ public class coon_surface : MonoBehaviour
     public Material interpolation1Mat;
     public Material interpolation2Mat;
     public Material erreurMat;
+    public Material pointRed;
+    public Material pointBlue;
+    public Material pointGreen;
+    public Material matSurface;
     public GameObject pointPre;
-
-    bool interpolation1 = true;
-    bool interpolation2 = false;
-    bool interpolation3 = false;
+    public GameObject pointSurface;
 
     void OnPostRender()
     {
@@ -32,6 +33,7 @@ public class coon_surface : MonoBehaviour
 
     private void DrawInterpolation()
     {
+        //rouge
         for(int i = 0; i < courbes[0].Count; i++)
         {
             GL.Begin(GL.LINES);
@@ -42,6 +44,7 @@ public class coon_surface : MonoBehaviour
             GL.End();
         }
 
+        //bleu
         for (int i = 0; i < courbes[2].Count; i++)
         {
             GL.Begin(GL.LINES);
@@ -52,6 +55,7 @@ public class coon_surface : MonoBehaviour
             GL.End();
         }
 
+        //vert
         for(int i = 0; i < erreurInterpol1.Count; i++)
         {
             GL.Begin(GL.LINES);
@@ -62,6 +66,7 @@ public class coon_surface : MonoBehaviour
             GL.End();
         }
 
+        //vert
         for (int i = 0; i < erreurInterpol2.Count; i++)
         {
             GL.Begin(GL.LINES);
@@ -140,14 +145,14 @@ public class coon_surface : MonoBehaviour
         d1.Add(new Vector3(0.0f, 0.0f, 0.0f));
         d1.Add(new Vector3(0.0f, 0.25f, 0.25f));
         d1.Add(new Vector3(0.0f, 0.3f, 0.5f));
-        d1.Add(new Vector3(0.0f, 0.25f, 0.75f));
+        //d1.Add(new Vector3(0.0f, 0.25f, 0.75f));
         d1.Add(new Vector3(0.0f, 0.0f, 1.0f));
 
         d2.Add(new Vector3(1.0f, -0.0f, 0.0f));
         d2.Add(new Vector3(1.0f, -0.25f, 0.25f));
         d2.Add(new Vector3(1.0f, -0.3f, 0.5f));
-        d2.Add(new Vector3(1.0f, -0.25f, 0.75f));
-        d2.Add(new Vector3(1.0f, -0.0f, 1.0f));
+        //d2.Add(new Vector3(1.0f, -0.25f, 0.75f));
+        d2.Add(new Vector3(1.0f, -0.3f, 1.0f));
 
         courbes.Add(c1);
         courbes.Add(c2);
@@ -173,59 +178,95 @@ public class coon_surface : MonoBehaviour
             interpol2.Add((courbes[2][i], courbes[3][i]));
         }
 
-        //création des points du premier segment d'erreur
-        //segment 1
+        //première interpolation
         {
             Vector3 seg1 = interpol1[0].Item2 - interpol1[0].Item1;
-            Vector3 pos1 = interpol1[0].Item1 + (0.25f * seg1);
-            Vector3 pos2 = interpol1[0].Item1 + (0.5f * seg1);
-            Vector3 pos3 = interpol1[0].Item1 + (0.75f * seg1);
-
             Vector3 seg2 = interpol1[interpol1.Count - 1].Item2 - interpol1[interpol1.Count - 1].Item1;
-            Vector3 pos1b = interpol1[interpol1.Count - 1].Item1 + (0.25f * seg2);
-            Vector3 pos2b = interpol1[interpol1.Count - 1].Item1 + (0.5f * seg2);
-            Vector3 pos3b = interpol1[interpol1.Count - 1].Item1 + (0.75f * seg2);
 
-            erreurInterpol1.Add((interpol1[0].Item1, interpol1[interpol1.Count - 1].Item1));
-            erreurInterpol1.Add((pos1, pos1b));
-            erreurInterpol1.Add((pos2, pos2b));
-            erreurInterpol1.Add((pos3, pos3b));
-            erreurInterpol1.Add((interpol1[0].Item2, interpol1[interpol1.Count - 1].Item2));
+            for (float i = 0.0f; i <= 1.0f; i += (1.0f / (float)(interpol2.Count - 1)))
+            {
+                Vector3 posA = interpol1[0].Item1 + (i * seg1);
+                Vector3 posB = interpol1[interpol1.Count - 1].Item1 + (i * seg2);
+                erreurInterpol1.Add((posA, posB));
+            }
         }
 
+        //seconde interpolation
         {
             Vector3 seg1 = interpol2[0].Item2 - interpol2[0].Item1;
-            Vector3 pos1 = interpol2[0].Item1 + (0.25f * seg1);
-            Vector3 pos2 = interpol2[0].Item1 + (0.5f * seg1);
-            Vector3 pos3 = interpol2[0].Item1 + (0.75f * seg1);
-
             Vector3 seg2 = interpol2[interpol2.Count - 1].Item2 - interpol2[interpol2.Count - 1].Item1;
-            Vector3 pos1b = interpol2[interpol2.Count - 1].Item1 + (0.25f * seg2);
-            Vector3 pos2b = interpol2[interpol2.Count - 1].Item1 + (0.5f * seg2);
-            Vector3 pos3b = interpol2[interpol2.Count - 1].Item1 + (0.75f * seg2);
 
-            erreurInterpol2.Add((interpol2[0].Item1, interpol2[interpol2.Count - 1].Item1));
-            erreurInterpol2.Add((pos1, pos1b));
-            erreurInterpol2.Add((pos2, pos2b));
-            erreurInterpol2.Add((pos3, pos3b));
-            erreurInterpol2.Add((interpol2[0].Item2, interpol2[interpol2.Count - 1].Item2));
+            for (float i = 0.0f; i <= 1.0f; i += (1.0f / (float)(interpol1.Count - 1)))
+            {
+                Vector3 posA = interpol2[0].Item1 + (i * seg1);
+                Vector3 posB = interpol2[interpol2.Count - 1].Item1 + (i * seg2);
+                erreurInterpol2.Add((posA, posB));
+            }
         }      
         
-        for(int i = 1; i < 4; i++)
+        List<Vector3> posR = new List<Vector3>();
+        List<Vector3> posBl = new List<Vector3>();
+        List<Vector3> posG = new List<Vector3>();
+
+        //calcul des spheres rouges
+        for(int i = 0; i < interpol1.Count; i++)
         {
-            for(int j = 1; j < 4; j++)
+            Vector3 seg = interpol1[i].Item2 - interpol1[i].Item1;
+
+            for (int j = 0; j < interpol2.Count; j++)
             {
-                Vector3 pos1 = interpol1[i].Item1 + ((float)j / 4 * (interpol1[i].Item2 - interpol1[i].Item1));
-                Vector3 pos2 = interpol2[i].Item1 + ((float)j / 4 * (interpol2[i].Item2 - interpol2[i].Item1));
-
-                Vector3 err1 = erreurInterpol1[i].Item1 + ((float)j / 4 * (erreurInterpol1[i].Item2 - erreurInterpol1[i].Item1));
-                Vector3 err2 = erreurInterpol2[i].Item1 + ((float)j / 4 * (erreurInterpol2[i].Item2 - erreurInterpol2[i].Item1));
-
-                Vector3 res = pos1 + pos2 - (err1 + err2);
+                Vector3 pos = interpol1[i].Item1 + (j * (1.0f / (interpol2.Count - 1))) * seg;
 
                 GameObject go = Instantiate<GameObject>(pointPre);
-                go.transform.position = res;
-            }           
+                go.transform.position = pos;
+                go.GetComponent<MeshRenderer>().material = pointRed;
+
+                posR.Add(pos);
+            }
+        }
+
+        //calcul des spheres bleues
+        for (int i = 0; i < interpol2.Count; i++)
+        {
+            Vector3 seg = interpol2[i].Item2 - interpol2[i].Item1;
+
+            for (int j = 0; j < interpol1.Count; j++)
+            {
+                Vector3 pos = interpol2[i].Item1 + (j * (1.0f / (interpol1.Count - 1))) * seg;
+
+                GameObject go = Instantiate<GameObject>(pointPre);
+                go.transform.position = pos;
+                go.GetComponent<MeshRenderer>().material = pointBlue;
+
+                posBl.Add(pos);
+            }
+        }
+
+        //calcule des spheres vertes
+        for (int i = 0; i < erreurInterpol1.Count; i++)
+        {
+            Vector3 seg = erreurInterpol1[i].Item2 - erreurInterpol1[i].Item1;
+
+            for (int j = 0; j < erreurInterpol2.Count; j++)
+            {
+                Vector3 pos = erreurInterpol1[i].Item1 + (j * (1.0f / (erreurInterpol2.Count - 1))) * seg;
+
+                GameObject go = Instantiate<GameObject>(pointPre);
+                go.transform.position = pos;
+                go.GetComponent<MeshRenderer>().material = pointGreen;
+
+                posG.Add(pos);
+            }
+        }
+
+        //calcul des points de la surface
+        for(int i = 0; i < posR.Count; i++)
+        {
+            Vector3 p = posR[i] + posBl[i] - posG[i];
+
+            GameObject go = Instantiate<GameObject>(pointPre);
+            go.transform.position = p;
+            go.GetComponent<MeshRenderer>().material = matSurface;
         }
     }
 }
